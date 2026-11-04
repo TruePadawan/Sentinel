@@ -35,5 +35,12 @@ build/
 ### VS Code ###
 .vscode/
 
+### Python ###
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+scripts/ground_truth.json
+
 ### Mac OS ###
 .DS_Store
