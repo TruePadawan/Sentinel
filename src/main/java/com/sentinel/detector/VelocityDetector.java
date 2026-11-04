@@ -9,10 +9,9 @@ import com.sentinel.model.OrderPlaced;
 import com.sentinel.model.TradeExecuted;
 import com.sentinel.util.JsonSerializer;
 import com.sentinel.util.SlidingWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,6 @@ import java.util.Map;
  * minute bounded by 60s window.
  */
 public class VelocityDetector implements Detector {
-
-    private static final Logger logger = LoggerFactory.getLogger(VelocityDetector.class);
 
     private final double dailyNotionalLimit;
     private final double minuteNotionalLimit;
@@ -101,16 +98,17 @@ public class VelocityDetector implements Detector {
         // Update daily notional
         state.dailyNotional += notional;
 
-        // Update rolling minute window
-        NotionalTick tick = new NotionalTick(event.timestamp(), notional);
-        state.rollingMinuteWindow.add(tick);
-        state.rollingMinuteNotional += notional;
-
-        // Recalculate rolling sum from window for accuracy after eviction
-        state.rollingMinuteNotional = 0.0;
-        for (NotionalTick t : state.rollingMinuteWindow.getDeque()) {
-            state.rollingMinuteNotional += t.notional();
+        // Update rolling minute window with O(1) amortized sum
+        // First evict expired entries and subtract their notional from the sum
+        long cutoff = event.timestamp() - 60_000;
+        Deque<NotionalTick> deque = state.rollingMinuteWindow.getDeque();
+        while (!deque.isEmpty() && deque.peekFirst().timestamp() < cutoff) {
+            state.rollingMinuteNotional -= deque.pollFirst().notional();
         }
+        // Add new tick
+        NotionalTick tick = new NotionalTick(event.timestamp(), notional);
+        deque.addLast(tick);
+        state.rollingMinuteNotional += notional;
 
         // Check daily limit
         if (state.dailyNotional > dailyNotionalLimit) {
@@ -127,10 +125,6 @@ public class VelocityDetector implements Detector {
                     "HIGH"
             );
             alerts.add(alert);
-            logger.info("Velocity alert: daily breach by {} on {} (${}/ ${})",
-                    traderId, symbol,
-                    String.format("%.2f", state.dailyNotional),
-                    String.format("%.2f", dailyNotionalLimit));
         }
 
         // Check rolling minute limit
@@ -148,10 +142,6 @@ public class VelocityDetector implements Detector {
                     "MEDIUM"
             );
             alerts.add(alert);
-            logger.info("Velocity alert: minute breach by {} on {} (${}/ ${})",
-                    traderId, symbol,
-                    String.format("%.2f", state.rollingMinuteNotional),
-                    String.format("%.2f", minuteNotionalLimit));
         }
 
         return alerts;

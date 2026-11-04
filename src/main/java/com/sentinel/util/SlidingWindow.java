@@ -46,12 +46,16 @@ public class SlidingWindow<T> {
      * Evicts all entries older than the window based on the reference timestamp.
      *
      * @param nowMs the current reference timestamp in milliseconds
+     * @return the number of evicted entries
      */
-    public void evict(long nowMs) {
+    public int evict(long nowMs) {
         long cutoff = nowMs - windowMs;
+        int count = 0;
         while (!deque.isEmpty() && extractor.getTimestamp(deque.peekFirst()) < cutoff) {
             deque.pollFirst();
+            count++;
         }
+        return count;
     }
 
     /**

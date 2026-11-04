@@ -9,8 +9,6 @@ import com.sentinel.model.OrderPlaced;
 import com.sentinel.model.TradeExecuted;
 import com.sentinel.util.JsonSerializer;
 import com.sentinel.util.SlidingWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +24,6 @@ import java.util.Map;
  * Complexity: O(1) amortized per event. Space: O(w) bounded by 60s window.
  */
 public class SpoofingDetector implements Detector {
-
-    private static final Logger logger = LoggerFactory.getLogger(SpoofingDetector.class);
 
     private final long cancelWindowMs;
     private final double ocRatioThreshold;
@@ -132,8 +128,6 @@ public class SpoofingDetector implements Detector {
                         "HIGH"
                 );
                 alerts.add(alert);
-                logger.info("Spoofing alert: fast cancel by {} on {} (orderId: {}, delay: {}ms)",
-                        event.traderId(), event.symbol(), event.originalOrderId(), cancelDelay);
             }
         }
 
@@ -150,19 +144,11 @@ public class SpoofingDetector implements Detector {
         int totalSamples = state.orderCount + state.cancelCount;
         if (totalSamples < ocMinSamples) return;
 
-        // Recalculate ratio from sliding window for accuracy after eviction
-        int windowOrders = 0;
-        int windowCancels = 0;
-        for (OrderEvent e : state.slidingWindow.getDeque()) {
-            if (e.isCancel()) windowCancels++;
-            else windowOrders++;
-        }
+        if (state.orderCount == 0) return;
 
-        if (windowOrders == 0) return;
-
-        // Cancel ratio: cancels per order placed. High ratio means excessive cancellations.
-        double cancelRatio = (double) windowCancels / windowOrders;
-        if (cancelRatio > ocRatioThreshold && windowCancels >= ocMinSamples) {
+        // Use incremental counters for O(1) ratio check
+        double cancelRatio = (double) state.cancelCount / state.orderCount;
+        if (cancelRatio > ocRatioThreshold && state.cancelCount >= ocMinSamples) {
             ComplianceAlert alert = new ComplianceAlert(
                     JsonSerializer.generateAlertId(),
                     AlertType.SPOOFING,
@@ -170,14 +156,12 @@ public class SpoofingDetector implements Detector {
                     event.symbol(),
                     String.format(
                             "Abnormal O/C ratio: %.2f cancels per order over 60s window (%d orders, %d cancels)",
-                            cancelRatio, windowOrders, windowCancels
+                            cancelRatio, state.orderCount, state.cancelCount
                     ),
                     event.timestamp(),
                     "MEDIUM"
             );
             alerts.add(alert);
-            logger.info("Spoofing alert: abnormal O/C ratio by {} on {} (ratio: {})",
-                    event.traderId(), event.symbol(), String.format("%.2f", cancelRatio));
         }
     }
 

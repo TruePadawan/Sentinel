@@ -10,8 +10,6 @@ import com.sentinel.model.TradeEdge;
 import com.sentinel.model.TradeExecuted;
 import com.sentinel.util.JsonSerializer;
 import com.sentinel.util.SlidingWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -33,8 +31,6 @@ import java.util.Set;
  * Space: O(E) bounded by time window.
  */
 public class WashTradeDetector implements Detector {
-
-    private static final Logger logger = LoggerFactory.getLogger(WashTradeDetector.class);
 
     private final long windowMs;
     private final int maxCycleLength;
@@ -127,9 +123,6 @@ public class WashTradeDetector implements Detector {
                     "HIGH"
             );
             alerts.add(alert);
-            logger.info("Wash trade alert: self-trade by {} on {} (notional: ${})",
-                    event.buyerId(), event.symbol(),
-                    String.format("%.2f", event.quantity() * event.price()));
             return;
         }
 
@@ -159,9 +152,6 @@ public class WashTradeDetector implements Detector {
                     "HIGH"
             );
             alerts.add(alert);
-            logger.info("Wash trade alert: ring {} on {} (participants: {}, notional: ${})",
-                    String.join(" -> ", cycle), event.symbol(), cycle.size(),
-                    String.format("%.2f", totalNotional));
         }
     }
 
