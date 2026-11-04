@@ -18,7 +18,7 @@ class JsonSerializerTest {
     class OrderPlacedTest {
 
         private static final OrderPlaced originalEvent = new OrderPlaced(
-            "evt-001", "ord-001", "TRADER_A", "AAPL", "BUY", 10000, 175.50, 1730784000000L
+                "evt-001", "ord-001", "TRADER_A", "AAPL", "BUY", 10000, 175.50, 1730784000000L
         );
 
         @Test
@@ -75,7 +75,7 @@ class JsonSerializerTest {
     class OrderCancelledTest {
 
         private static final OrderCancelled originalEvent = new OrderCancelled(
-            "evt-002", "ord-001", "TRADER_A", "AAPL", 10000, 175.50, 1730784000045L
+                "evt-002", "ord-001", "TRADER_A", "AAPL", 10000, 175.50, 1730784000045L
         );
 
         @Test
@@ -119,7 +119,7 @@ class JsonSerializerTest {
     class TradeExecutedTest {
 
         private static final TradeExecuted originalEvent = new TradeExecuted(
-            "evt-003", "TRADER_A", "TRADER_B", "AAPL", 500, 175.52, 1730784001000L
+                "evt-003", "TRADER_A", "TRADER_B", "AAPL", 500, 175.52, 1730784001000L
         );
 
         @Test
@@ -178,18 +178,18 @@ class JsonSerializerTest {
         @DisplayName("Deserializes OrderPlaced from raw JSON string")
         void deserializeOrderPlacedFromRawJson() {
             String json = """
-                {
-                  "type": "ORDER_PLACED",
-                  "eventId": "evt-100",
-                  "orderId": "ord-100",
-                  "traderId": "TRADER_X",
-                  "symbol": "GOOG",
-                  "side": "SELL",
-                  "quantity": 5000,
-                  "price": 140.25,
-                  "timestamp": 1730784100000
-                }
-                """;
+                    {
+                      "type": "ORDER_PLACED",
+                      "eventId": "evt-100",
+                      "orderId": "ord-100",
+                      "traderId": "TRADER_X",
+                      "symbol": "GOOG",
+                      "side": "SELL",
+                      "quantity": 5000,
+                      "price": 140.25,
+                      "timestamp": 1730784100000
+                    }
+                    """;
             MarketEvent event = JsonSerializer.deserializeEvent(json);
             assertInstanceOf(OrderPlaced.class, event);
             OrderPlaced placed = (OrderPlaced) event;
@@ -202,17 +202,17 @@ class JsonSerializerTest {
         @DisplayName("Deserializes OrderCancelled from raw JSON string")
         void deserializeOrderCancelledFromRawJson() {
             String json = """
-                {
-                  "type": "ORDER_CANCELLED",
-                  "eventId": "evt-101",
-                  "originalOrderId": "ord-100",
-                  "traderId": "TRADER_X",
-                  "symbol": "GOOG",
-                  "quantity": 5000,
-                  "price": 140.25,
-                  "timestamp": 1730784100030
-                }
-                """;
+                    {
+                      "type": "ORDER_CANCELLED",
+                      "eventId": "evt-101",
+                      "originalOrderId": "ord-100",
+                      "traderId": "TRADER_X",
+                      "symbol": "GOOG",
+                      "quantity": 5000,
+                      "price": 140.25,
+                      "timestamp": 1730784100030
+                    }
+                    """;
             MarketEvent event = JsonSerializer.deserializeEvent(json);
             assertInstanceOf(OrderCancelled.class, event);
             OrderCancelled cancelled = (OrderCancelled) event;
@@ -223,17 +223,17 @@ class JsonSerializerTest {
         @DisplayName("Deserializes TradeExecuted from raw JSON string")
         void deserializeTradeExecutedFromRawJson() {
             String json = """
-                {
-                  "type": "TRADE_EXECUTED",
-                  "eventId": "evt-102",
-                  "buyerId": "TRADER_X",
-                  "sellerId": "TRADER_Y",
-                  "symbol": "GOOG",
-                  "quantity": 100,
-                  "price": 140.30,
-                  "timestamp": 1730784101000
-                }
-                """;
+                    {
+                      "type": "TRADE_EXECUTED",
+                      "eventId": "evt-102",
+                      "buyerId": "TRADER_X",
+                      "sellerId": "TRADER_Y",
+                      "symbol": "GOOG",
+                      "quantity": 100,
+                      "price": 140.30,
+                      "timestamp": 1730784101000
+                    }
+                    """;
             MarketEvent event = JsonSerializer.deserializeEvent(json);
             assertInstanceOf(TradeExecuted.class, event);
             TradeExecuted executed = (TradeExecuted) event;
@@ -245,11 +245,11 @@ class JsonSerializerTest {
         @DisplayName("Pattern matching switch works on deserialized events")
         void patternMatchingOnDeserializedEvents() {
             String orderPlacedJson = """
-                {"type":"ORDER_PLACED","eventId":"e1","orderId":"o1","traderId":"T1","symbol":"AAPL","side":"BUY","quantity":100,"price":150.0,"timestamp":1000}
-                """;
+                    {"type":"ORDER_PLACED","eventId":"e1","orderId":"o1","traderId":"T1","symbol":"AAPL","side":"BUY","quantity":100,"price":150.0,"timestamp":1000}
+                    """;
             String tradeExecutedJson = """
-                {"type":"TRADE_EXECUTED","eventId":"e2","buyerId":"T1","sellerId":"T2","symbol":"AAPL","quantity":50,"price":150.0,"timestamp":2000}
-                """;
+                    {"type":"TRADE_EXECUTED","eventId":"e2","buyerId":"T1","sellerId":"T2","symbol":"AAPL","quantity":50,"price":150.0,"timestamp":2000}
+                    """;
 
             MarketEvent event1 = JsonSerializer.deserializeEvent(orderPlacedJson);
             MarketEvent event2 = JsonSerializer.deserializeEvent(tradeExecutedJson);
@@ -276,9 +276,9 @@ class JsonSerializerTest {
     class ComplianceAlertTest {
 
         private static final ComplianceAlert originalAlert = new ComplianceAlert(
-            "alert-001", AlertType.SPOOFING, "TRADER_A", "AAPL",
-            "Cancelled 95% of orders within 50ms window; O/C ratio 18.2 over 60s",
-            1730784000050L, "HIGH"
+                "alert-001", AlertType.SPOOFING, "TRADER_A", "AAPL",
+                "Cancelled 95% of orders within 50ms window; O/C ratio 18.2 over 60s",
+                1730784000050L, "HIGH"
         );
 
         @Test
@@ -315,7 +315,7 @@ class JsonSerializerTest {
         void allAlertTypes() {
             for (AlertType type : AlertType.values()) {
                 ComplianceAlert alert = new ComplianceAlert(
-                    "test", type, "T", "S", "details", 0L, "LOW"
+                        "test", type, "T", "S", "details", 0L, "LOW"
                 );
                 String json = JsonSerializer.serializeAlert(alert);
                 ComplianceAlert deserialized = JsonSerializer.deserializeAlert(json);
@@ -353,8 +353,8 @@ class JsonSerializerTest {
         @DisplayName("Throws on missing type discriminator")
         void throwsOnMissingType() {
             String json = """
-                {"eventId":"e1","traderId":"T1","symbol":"AAPL","timestamp":1000}
-                """;
+                    {"eventId":"e1","traderId":"T1","symbol":"AAPL","timestamp":1000}
+                    """;
             assertThrows(RuntimeException.class, () -> JsonSerializer.deserializeEvent(json));
         }
 
@@ -362,19 +362,19 @@ class JsonSerializerTest {
         @DisplayName("Ignores unknown properties gracefully")
         void ignoresUnknownProperties() {
             String json = """
-                {
-                  "type": "ORDER_PLACED",
-                  "eventId": "e1",
-                  "orderId": "o1",
-                  "traderId": "T1",
-                  "symbol": "AAPL",
-                  "side": "BUY",
-                  "quantity": 100,
-                  "price": 150.0,
-                  "timestamp": 1000,
-                  "unknownField": "should be ignored"
-                }
-                """;
+                    {
+                      "type": "ORDER_PLACED",
+                      "eventId": "e1",
+                      "orderId": "o1",
+                      "traderId": "T1",
+                      "symbol": "AAPL",
+                      "side": "BUY",
+                      "quantity": 100,
+                      "price": 150.0,
+                      "timestamp": 1000,
+                      "unknownField": "should be ignored"
+                    }
+                    """;
             MarketEvent event = JsonSerializer.deserializeEvent(json);
             assertInstanceOf(OrderPlaced.class, event);
             assertEquals("e1", event.eventId());

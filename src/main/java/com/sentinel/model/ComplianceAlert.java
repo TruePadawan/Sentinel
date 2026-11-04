@@ -5,11 +5,12 @@ package com.sentinel.model;
  * Published to the `compliance-alerts` Kafka topic.
  */
 public record ComplianceAlert(
-    String alertId,
-    AlertType alertType,
-    String traderId,
-    String symbol,
-    String details,
-    long timestamp,
-    String severity
-) {}
+        String alertId,
+        AlertType alertType,
+        String traderId,
+        String symbol,
+        String details,
+        long timestamp,
+        String severity
+) {
+}

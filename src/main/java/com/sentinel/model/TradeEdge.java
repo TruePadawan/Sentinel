@@ -5,12 +5,12 @@ package com.sentinel.model;
  * Represents a trade relationship between two traders.
  */
 public record TradeEdge(
-    String from,
-    String to,
-    String symbol,
-    long timestamp,
-    double price,
-    double quantity
+        String from,
+        String to,
+        String symbol,
+        long timestamp,
+        double price,
+        double quantity
 ) {
     /**
      * Computes the notional value of this trade edge.

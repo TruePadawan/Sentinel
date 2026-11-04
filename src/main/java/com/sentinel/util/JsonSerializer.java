@@ -20,9 +20,9 @@ public class JsonSerializer {
     private static final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     /**
      * Deserializes a JSON string into a polymorphic MarketEvent.

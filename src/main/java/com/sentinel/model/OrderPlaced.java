@@ -4,14 +4,14 @@ package com.sentinel.model;
  * Represents an order placed on the market.
  */
 public record OrderPlaced(
-    String eventId,
-    String orderId,
-    String traderId,
-    String symbol,
-    String side,
-    double quantity,
-    double price,
-    long timestamp
+        String eventId,
+        String orderId,
+        String traderId,
+        String symbol,
+        String side,
+        double quantity,
+        double price,
+        long timestamp
 ) implements MarketEvent {
 
     /**

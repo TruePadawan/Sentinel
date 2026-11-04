@@ -8,26 +8,34 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * All market events implement this interface, enabling pattern matching and type-safe dispatch.
  */
 @JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    property = "type"
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
 )
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = OrderPlaced.class, name = "ORDER_PLACED"),
-    @JsonSubTypes.Type(value = OrderCancelled.class, name = "ORDER_CANCELLED"),
-    @JsonSubTypes.Type(value = TradeExecuted.class, name = "TRADE_EXECUTED")
+        @JsonSubTypes.Type(value = OrderPlaced.class, name = "ORDER_PLACED"),
+        @JsonSubTypes.Type(value = OrderCancelled.class, name = "ORDER_CANCELLED"),
+        @JsonSubTypes.Type(value = TradeExecuted.class, name = "TRADE_EXECUTED")
 })
 public sealed interface MarketEvent
-    permits OrderPlaced, OrderCancelled, TradeExecuted {
+        permits OrderPlaced, OrderCancelled, TradeExecuted {
 
-    /** Unique event identifier */
+    /**
+     * Unique event identifier
+     */
     String eventId();
 
-    /** Primary actor trader ID; for TradeExecuted this returns buyerId */
+    /**
+     * Primary actor trader ID; for TradeExecuted this returns buyerId
+     */
     String traderId();
 
-    /** Trading symbol (e.g., "AAPL") */
+    /**
+     * Trading symbol (e.g., "AAPL")
+     */
     String symbol();
 
-    /** Event timestamp in milliseconds since epoch */
+    /**
+     * Event timestamp in milliseconds since epoch
+     */
     long timestamp();
 }

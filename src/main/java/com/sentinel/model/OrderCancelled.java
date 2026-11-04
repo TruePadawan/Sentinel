@@ -4,13 +4,13 @@ package com.sentinel.model;
  * Represents an order cancellation event.
  */
 public record OrderCancelled(
-    String eventId,
-    String originalOrderId,
-    String traderId,
-    String symbol,
-    double quantity,
-    double price,
-    long timestamp
+        String eventId,
+        String originalOrderId,
+        String traderId,
+        String symbol,
+        double quantity,
+        double price,
+        long timestamp
 ) implements MarketEvent {
 
     /**
