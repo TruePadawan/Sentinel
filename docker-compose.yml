@@ -1,0 +1,25 @@
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.2.18
+    container_name: sentinel-redpanda
+    ports:
+      - "9092:9092"        # Kafka API
+      - "9644:9644"        # Admin API
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --kafka-addr PLAINTEXT://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
+      - --advertise-kafka-addr PLAINTEXT://localhost:9092,OUTSIDE://localhost:29092
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "info"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redpanda-data:
