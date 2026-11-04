@@ -41,6 +41,8 @@ __pycache__/
 *.pyc
 *.pyo
 scripts/ground_truth.json
+scripts/verification_results.json
+benchmark_per_detector.json
 
 ### Mac OS ###
 .DS_Store
