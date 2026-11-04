@@ -127,7 +127,7 @@ public class VelocityDetector implements Detector {
                     "HIGH"
             );
             alerts.add(alert);
-            logger.info("Velocity alert: daily breach by {} on {} (${:.2f} / ${:.2f})",
+            logger.info("Velocity alert: daily breach by {} on {} (${}/ ${})",
                     traderId, symbol,
                     String.format("%.2f", state.dailyNotional),
                     String.format("%.2f", dailyNotionalLimit));
@@ -148,7 +148,7 @@ public class VelocityDetector implements Detector {
                     "MEDIUM"
             );
             alerts.add(alert);
-            logger.info("Velocity alert: minute breach by {} on {} (${:.2f} / ${:.2f})",
+            logger.info("Velocity alert: minute breach by {} on {} (${}/ ${})",
                     traderId, symbol,
                     String.format("%.2f", state.rollingMinuteNotional),
                     String.format("%.2f", minuteNotionalLimit));

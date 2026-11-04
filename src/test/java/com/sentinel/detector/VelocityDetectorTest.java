@@ -222,7 +222,7 @@ class VelocityDetectorTest {
                 detector.process(trade);
             }
 
-            // Wait 60 seconds — all ticks should be evicted
+            // Wait 60 seconds: all ticks should be evicted
             TradeExecuted laterTrade = new TradeExecuted(
                 "evt-later", "TRADER_A", "TRADER_B", "AAPL",
                 1000, 150.00, baseTime + 61_000
